@@ -5,9 +5,9 @@
 #include <BlynkSimpleEsp8266.h>
 
 // definisi variabel token, ssid, password
-char auth[] = "token blynk";
-char ssid[] = "name wifi";
-char pass[] = "password wifi";
+char auth[] = "Auth token";
+char ssid[] = "Wifi name";
+char pass[] = "Password wifi";
 
 // definisi pin widget LED pad blynk menggunakan virtual pin
 WidgetLED led(V1);
