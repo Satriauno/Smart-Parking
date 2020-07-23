@@ -1,61 +1,52 @@
-/*************************************************************
-  Download latest Blynk library here:
-    https://github.com/blynkkk/blynk-library/releases/latest
+#define BLYNK_PRINT Serial // definisi serial pada blynk
 
-  Blynk is a platform with iOS and Android apps to control
-  Arduino, Raspberry Pi and the likes over the Internet.
-  You can easily build graphic interfaces for all your
-  projects by simply dragging and dropping widgets.
+// Setting Library
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
 
-    Downloads, docs, tutorials: http://www.blynk.cc
-    Sketch generator:           http://examples.blynk.cc
-    Blynk community:            http://community.blynk.cc
-    Follow us:                  http://www.fb.com/blynkapp
-                                http://twitter.com/blynk_app
+// definisi variabel token, ssid, password
+char auth[] = "token blynk";
+char ssid[] = "name wifi";
+char pass[] = "password wifi";
 
-  Blynk library is licensed under MIT license
-  This example code is in public domain.
+// definisi pin widget LED pad blynk menggunakan virtual pin
+WidgetLED led(V1);
 
- *************************************************************
+// definisi pin sensor IR yang digunakan
+int sensor = D1;
 
-  Rotate a servo using a slider!
-
-  App project setup:
-    Slider widget (0...180) on V3
- *************************************************************/
-
-/* Comment this out to disable prints and save space */
-#define BLYNK_PRINT Serial
-
-
-#include <SPI.h>
-#include <Ethernet.h>
-#include <BlynkSimpleEthernet.h>
-#include <Servo.h>
-
-// You should get Auth Token in the Blynk App.
-// Go to the Project Settings (nut icon).
-char auth[] = "YourAuthToken";
-
-Servo servo;
-
-BLYNK_WRITE(V3)
-{
-  servo.write(param.asInt());
-}
-
-void setup()
-{
-  // Debug console
+void setup() {
   Serial.begin(9600);
 
-  Blynk.begin(auth);
+  Blynk.begin(auth, ssid, pass);
 
-  servo.attach(9);
+  // setting mode pin menjadi pin input
+  pinMode(sensor, INPUT);
+
+  // setting test koneksi
+  while(Blynk.connected() == false){
+    Serial.println("Tidak terkoneksi");
+  }
+
 }
 
-void loop()
-{
+void loop() {
+  // Pembacaan sensor IR
+  int sensorval = digitalRead(sensor);
+
+  // menampilkan nilai sensor IR
+  Serial.println(sensorval);
+  delay(2000);
+
+  //Pembuatan kondisi sensor dengan aktuator (led)
+  if(sensorval == 1){
+    led.on();
+  }
+
+  if(sensorval == 0){
+    led.off();
+  }
+
   Blynk.run();
-}
 
+}
